@@ -17,13 +17,24 @@ export default function SideNav({ activeHref }: SideNavProps) {
     const sideNavItems: SideNavigationProps.Item[] = [
         {
             type: 'link',
-            text: 'Consultations',
-            href: '/conversations',
+            text: 'Patients',
+            href: '/generate',
         },
+        {
+            type: 'link',
+            text: 'Clinics',
+            href: '/generate',
+        },
+        { type: 'divider' },
         {
             type: 'link',
             text: 'New Consultation',
             href: '/new',
+        },
+        {
+            type: 'link',
+            text: 'Todays Consultations',
+            href: '/conversations',
         },
         { type: 'divider' },
         {
@@ -61,7 +72,7 @@ export default function SideNav({ activeHref }: SideNavProps) {
     return (
         <SideNavigation
             activeHref={activeHref}
-            header={{ text: 'Consultation Management', href: '/' }}
+            header={{ text: 'AWS Demo EPR', href: '/' }}
             items={sideNavItems}
             onFollow={(e) => {
                 e.preventDefault();
