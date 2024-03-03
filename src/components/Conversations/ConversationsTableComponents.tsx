@@ -189,7 +189,7 @@ function TableHeader({ selectedHealthScribeJob, headerCounterText, listHealthScr
                     />
                 }
             >
-                Conversations
+                Consultations
             </Header>
             <Form>
                 <Grid gridDefinition={[{ colspan: 5 }, { colspan: 3 }]}>

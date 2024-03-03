@@ -155,7 +155,7 @@ export default function AudioRecorder({ setRecordedAudio }: AudioRecorderProps) 
                             >
                                 {recordingStatus === 'inactive' ? (
                                     <span>
-                                        <Icon name="caret-right-filled"></Icon> Start
+                                        <Icon name="caret-right-filled"></Icon> Begin Consultation
                                     </span>
                                 ) : recordingStatus === 'recording' ? (
                                     <span className={styles.audioRecorderIcon}>

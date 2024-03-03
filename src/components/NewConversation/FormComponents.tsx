@@ -19,7 +19,7 @@ type InputNameProps = {
 export function InputName({ jobName, setJobName }: InputNameProps) {
     return (
         <FormField
-            label="Job name"
+            label="Patients name"
             description="The name can be up to 200 characters long. Valid characters are a-z, A-Z, 0-9, . (period), _ (underscore), and – (hyphen)."
         >
             <Input onChange={({ detail }) => setJobName(detail.value)} placeholder="Name" value={jobName} />
