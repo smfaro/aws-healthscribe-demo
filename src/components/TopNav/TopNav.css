@@ -4,10 +4,3 @@
     top: 0;
     z-index: 1999;
 }
-div.awsui_title_k5dlb_ko4bx_222::before {
-    width:100px; /*width of your image*/
-    height:100px; /*height of your image*/
-    margin:0; /* If you want no margin */
-    padding:0; /*if your want to padding */
-    content:url(https://www.globo-tek.com/hubfs/3ed9d757.webp);
-}

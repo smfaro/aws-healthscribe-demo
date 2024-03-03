@@ -141,6 +141,10 @@ export default function TopNav() {
                 identity={{
                     href: '/',
                     title: 'AWS London Summit Clinic',
+                    logo: {          
+                        src: "/logo.png",          
+                        alt: "Service"        
+                    }
                 }}
                 utilities={navUtils}
             />
