@@ -18,12 +18,12 @@ export default function SideNav({ activeHref }: SideNavProps) {
         {
             type: 'link',
             text: 'Patients',
-            href: '/generate',
+            href: '/patients',
         },
         {
             type: 'link',
             text: 'Clinics',
-            href: '/generate',
+            href: '/clinics',
         },
         { type: 'divider' },
         {
