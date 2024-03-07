@@ -35,7 +35,7 @@ export default () => {
         {
           id: "variable",
           header: "Variable name",
-          cell: item => <Link href="#">{item.name}</Link>,
+          cell: item => item.name,
           sortingField: "name",
           isRowHeader: true
         },
