@@ -2,126 +2,206 @@
 // SPDX-License-Identifier: MIT-0
 import React, { useState } from 'react';
 
-import Button from '@cloudscape-design/components/button';
-import Container from '@cloudscape-design/components/container';
-import ContentLayout from '@cloudscape-design/components/content-layout';
-import ExpandableSection from '@cloudscape-design/components/expandable-section';
-import Form from '@cloudscape-design/components/form';
-import FormField from '@cloudscape-design/components/form-field';
-import Header from '@cloudscape-design/components/header';
-import { OptionDefinition } from '@cloudscape-design/components/internal/components/option/interfaces';
-import Select from '@cloudscape-design/components/select';
-import SpaceBetween from '@cloudscape-design/components/space-between';
-import Spinner from '@cloudscape-design/components/spinner';
+import Table from "@cloudscape-design/components/table";
+import Box from "@cloudscape-design/components/box";
+import SpaceBetween from "@cloudscape-design/components/space-between";
+import Button from "@cloudscape-design/components/button";
+import TextFilter from "@cloudscape-design/components/text-filter";
+import Header from "@cloudscape-design/components/header";
+import Pagination from "@cloudscape-design/components/pagination";
+import CollectionPreferences from "@cloudscape-design/components/collection-preferences";
 
-import * as settingOptions from '@/store/appSettings/settingOptions';
-import { useAppSettingsContext } from '@/store/appSettings';
-import { DEFAULT_SETTINGS } from '@/store/appSettings/defaultSettings';
-
-export type AppSettings = {
-    'app.region': { label: string; value: string };
-    'app.apiTiming': { label: string; value: string };
-};
-
-export default function Settings() {
-    const { appSettings, setAppSettings } = useAppSettingsContext();
-    // Saving is instant, but create artificial wait
-    const [isSaving, setIsSaving] = useState(false);
-    // Make a copy of appSettings, write back it after form validation
-    const [settings, setSettings] = useState<AppSettings>(appSettings);
-
-    // Update local settings state
-    function updateSettings(settingKey: string, value: string | OptionDefinition) {
-        setSettings((prevSettings) => ({
-            ...prevSettings,
-            ...{
-                [settingKey]: value,
-            },
-        }));
-    }
-
-    // Reset settings to defaults, defined in consts
-    function handleResetToDefaults() {
-        setSettings(DEFAULT_SETTINGS);
-    }
-
-    // Reload settings from appSettings from appContext
-    function handleReload() {
-        setSettings(appSettings);
-    }
-
-    function handleSave() {
-        setIsSaving(true);
-        setTimeout(() => {
-            setAppSettings(settings);
-            setIsSaving(false);
-            window.location.reload();
-        }, 300);
-    }
-
-    return (
-        <ContentLayout
-            header={
-                <Header variant="h2" description="Settings are saved locally to the browser">
-                    Settings
-                </Header>
-            }
+export default () => {
+  const [
+    selectedItems,
+    setSelectedItems
+  ] = React.useState([{ name: "Item 2" }]);
+  return (
+    <Table
+      onSelectionChange={({ detail }) =>
+        setSelectedItems(detail.selectedItems)
+      }
+      selectedItems={selectedItems}
+      ariaLabels={{
+        selectionGroupLabel: "Items selection",
+        allItemsSelectionLabel: ({ selectedItems }) =>
+          `${selectedItems.length} ${
+            selectedItems.length === 1 ? "item" : "items"
+          } selected`,
+        itemSelectionLabel: ({ selectedItems }, item) =>
+          item.name
+      }}
+      columnDefinitions={[
+        {
+          id: "variable",
+          header: "Variable name",
+          cell: item => <Link href="#">{item.name}</Link>,
+          sortingField: "name",
+          isRowHeader: true
+        },
+        {
+          id: "value",
+          header: "Text value",
+          cell: item => item.alt,
+          sortingField: "alt"
+        },
+        {
+          id: "type",
+          header: "Type",
+          cell: item => item.type
+        },
+        {
+          id: "description",
+          header: "Description",
+          cell: item => item.description
+        }
+      ]}
+      columnDisplay={[
+        { id: "variable", visible: true },
+        { id: "value", visible: true },
+        { id: "type", visible: true },
+        { id: "description", visible: true }
+      ]}
+      enableKeyboardNavigation
+      items={[
+        {
+          name: "Item 1",
+          alt: "First",
+          description: "This is the first item",
+          type: "1A",
+          size: "Small"
+        },
+        {
+          name: "Item 2",
+          alt: "Second",
+          description: "This is the second item",
+          type: "1B",
+          size: "Large"
+        },
+        {
+          name: "Item 3",
+          alt: "Third",
+          description: "-",
+          type: "1A",
+          size: "Large"
+        },
+        {
+          name: "Item 4",
+          alt: "Fourth",
+          description: "This is the fourth item",
+          type: "2A",
+          size: "Small"
+        },
+        {
+          name: "Item 5",
+          alt: "-",
+          description:
+            "This is the fifth item with a longer description",
+          type: "2A",
+          size: "Large"
+        },
+        {
+          name: "Item 6",
+          alt: "Sixth",
+          description: "This is the sixth item",
+          type: "1A",
+          size: "Small"
+        }
+      ]}
+      loadingText="Loading resources"
+      selectionType="multi"
+      trackBy="name"
+      empty={
+        <Box
+          margin={{ vertical: "xs" }}
+          textAlign="center"
+          color="inherit"
         >
-            <Container>
-                <form
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                        handleSave();
-                    }}
-                >
-                    <Form
-                        actions={
-                            <SpaceBetween direction="horizontal" size="xs">
-                                <Button disabled={isSaving} formAction="none" onClick={() => handleReload()}>
-                                    Reload
-                                </Button>
-                                <Button disabled={isSaving} variant="primary">
-                                    {isSaving ? <Spinner /> : 'Save'}
-                                </Button>
-                            </SpaceBetween>
-                        }
-                        secondaryActions={
-                            <Button disabled={isSaving} formAction="none" onClick={() => handleResetToDefaults()}>
-                                Reset to Defaults
-                            </Button>
-                        }
-                    >
-                        <SpaceBetween size={'m'}>
-                            <FormField
-                                label="AWS HealthScribe Region"
-                                description="During the public preview, AWS HealthScribe is available in the US East (N. Virginia) region."
-                            >
-                                <Select
-                                    selectedOption={settings['app.region']}
-                                    onChange={({ detail }) => updateSettings('app.region', detail.selectedOption)}
-                                    options={settingOptions.appRegionOptions}
-                                />
-                            </FormField>
-                            <ExpandableSection headerText="Advanced">
-                                <SpaceBetween direction="vertical" size="m">
-                                    <FormField
-                                        label="API Timing"
-                                        description="Print API timing information in the browser console."
-                                    >
-                                        <Select
-                                            selectedOption={settings['app.apiTiming']}
-                                            onChange={({ detail }) =>
-                                                updateSettings('app.apiTiming', detail.selectedOption)
-                                            }
-                                            options={settingOptions.apiTimings}
-                                        />
-                                    </FormField>
-                                </SpaceBetween>
-                            </ExpandableSection>
-                        </SpaceBetween>
-                    </Form>
-                </form>
-            </Container>
-        </ContentLayout>
-    );
+          <SpaceBetween size="m">
+            <b>No resources</b>
+            <Button>Create resource</Button>
+          </SpaceBetween>
+        </Box>
+      }
+      filter={
+        <TextFilter
+          filteringPlaceholder="Find resources"
+          filteringText=""
+        />
+      }
+      header={
+        <Header
+          counter={
+            selectedItems.length
+              ? "(" + selectedItems.length + "/10)"
+              : "(10)"
+          }
+        >
+          Table with common features
+        </Header>
+      }
+      pagination={
+        <Pagination currentPageIndex={1} pagesCount={2} />
+      }
+      preferences={
+        <CollectionPreferences
+          title="Preferences"
+          confirmLabel="Confirm"
+          cancelLabel="Cancel"
+          preferences={{
+            pageSize: 10,
+            contentDisplay: [
+              { id: "variable", visible: true },
+              { id: "value", visible: true },
+              { id: "type", visible: true },
+              { id: "description", visible: true }
+            ]
+          }}
+          pageSizePreference={{
+            title: "Page size",
+            options: [
+              { value: 10, label: "10 resources" },
+              { value: 20, label: "20 resources" }
+            ]
+          }}
+          wrapLinesPreference={{}}
+          stripedRowsPreference={{}}
+          contentDensityPreference={{}}
+          contentDisplayPreference={{
+            options: [
+              {
+                id: "variable",
+                label: "Variable name",
+                alwaysVisible: true
+              },
+              { id: "value", label: "Text value" },
+              { id: "type", label: "Type" },
+              { id: "description", label: "Description" }
+            ]
+          }}
+          stickyColumnsPreference={{
+            firstColumns: {
+              title: "Stick first column(s)",
+              description:
+                "Keep the first column(s) visible while horizontally scrolling the table content.",
+              options: [
+                { label: "None", value: 0 },
+                { label: "First column", value: 1 },
+                { label: "First two columns", value: 2 }
+              ]
+            },
+            lastColumns: {
+              title: "Stick last column",
+              description:
+                "Keep the last column visible while horizontally scrolling the table content.",
+              options: [
+                { label: "None", value: 0 },
+                { label: "Last column", value: 1 }
+              ]
+            }
+          }}
+        />
+      }
+    />
+  );
 }
